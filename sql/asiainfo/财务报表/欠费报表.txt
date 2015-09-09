@@ -1,0 +1,72 @@
+﻿需要将老系统的表割接过来的表
+Rpt_Zw06028
+Rpt_Zw06027
+Rpt_Zw06026
+Rpt_Zw06025
+Rpt_Zw06024
+Rpt_Unpay_Adjust
+Rpt_Unpay_Month_Ys
+Rpt_Unpay_User_Detail
+
+delete from shfin.Rpt_Zw06028;
+insert into shfin.Rpt_Zw06028 select * from shfin.Rpt_Zw06028_75;
+
+delete from shfin.Rpt_Zw06027;
+insert into shfin.Rpt_Zw06027 select * from shfin.Rpt_Zw06027_75;
+
+delete from shfin.Rpt_Zw06026;
+insert into shfin.Rpt_Zw06026 select * from shfin.Rpt_Zw06026_75;
+
+delete from shfin.Rpt_Zw06025;
+insert into shfin.Rpt_Zw06025 select * from shfin.Rpt_Zw06025_75;
+
+delete from shfin.Rpt_Zw06024;
+insert into shfin.Rpt_Zw06024 select * from shfin.Rpt_Zw06024_75;
+
+delete from shfin.Rpt_Unpay_Adjust;
+insert into shfin.Rpt_Unpay_Adjust select * from shfin.Rpt_Unpay_Adjust_75;
+
+delete from shfin.Rpt_Unpay_Month_Ys;
+insert into shfin.Rpt_Unpay_Month_Ys select * from shfin.Rpt_Unpay_Month_Ys_75;
+
+delete from shfin.Rpt_Unpay_User_Detail;
+insert into shfin.Rpt_Unpay_User_Detail select * from shfin.Rpt_Unpay_User_Detail_75;
+
+runstats on table shfin.Rpt_Zw06028  with distribution and detailed indexes all;
+runstats on table shfin.Rpt_Zw06027  with distribution and detailed indexes all;
+runstats on table shfin.Rpt_Zw06026  with distribution and detailed indexes all;
+runstats on table shfin.Rpt_Zw06025  with distribution and detailed indexes all;
+runstats on table shfin.Rpt_Zw06024  with distribution and detailed indexes all;
+runstats on table shfin.Rpt_Unpay_Adjust  with distribution and detailed indexes all;
+runstats on table shfin.Rpt_Unpay_Month_Ys  with distribution and detailed indexes all;
+runstats on table shfin.Rpt_Unpay_User_Detail  with distribution and detailed indexes all;
+
+
+
+
+
+
+结果表核对
+1、Rpt_Zw06028 新老表核对一致
+2、Rpt_Zw06026
+select STAT_MONTH, BILL_MONTH, PER_CNT, PER_FEE, GROUP_CNT,
+    GROUP_FEE, TOTAL_CNT, TOTAL_FEE, ODDMENT_CNT, ODDMENT_FEE,
+    PER_YF_UNPAY_CNT, PER_YF_UNPAY_FEE, PER_HF_UNPAY_CNT,
+    PER_HF_UNPAY_FEE, GROUP_UNPAY_CNT, GROUP_UNPAY_FEE, UNPAY_CNT,
+    UNPAY_FEE
+  from SHFIN.RPT_ZW06026 where stat_month=201408
+except
+select STAT_MONTH, BILL_MONTH, PER_CNT, PER_FEE, GROUP_CNT,
+    GROUP_FEE, TOTAL_CNT, TOTAL_FEE, ODDMENT_CNT, ODDMENT_FEE,
+    PER_YF_UNPAY_CNT, PER_YF_UNPAY_FEE, PER_HF_UNPAY_CNT,
+    PER_HF_UNPAY_FEE, GROUP_UNPAY_CNT, GROUP_UNPAY_FEE, UNPAY_CNT,
+    UNPAY_FEE
+  from SHFIN.RPT_ZW06026_75 where stat_month=201408;
+
+select STAT_MONTH, BILL_MONTH, PER_CNT, PER_FEE,GROUP_CNT,GROUP_FEE,TOTAL_CNT,TOTAL_FEE,ODDMENT_CNT
+  from SHFIN.RPT_ZW06026 where stat_month=201408
+except
+select STAT_MONTH, BILL_MONTH, PER_CNT, PER_FEE,GROUP_CNT,GROUP_FEE,TOTAL_CNT,TOTAL_FEE,ODDMENT_CNT
+  from SHFIN.RPT_ZW06026_75 where stat_month=201408;
+
+

@@ -1,0 +1,319 @@
+﻿cd /data/work/procbass1
+1、电子渠道归类维表 DIM_BASS1_CHANNEL_OP_INFO_20150502
+/data/work/procbass1/run.sh BassChannelopInfo 20150502
+2、实体渠道维表
+/data/work/procbass1/run.sh BassDIM_BASS1_CHANNEL_ORG_AGENT  20150528
+/data/work/procbass1/run.sh Bass1ChannelInfoBase    20150528
+/data/work/procbass1/run.sh Bass06035D      20150528
+/data/work/procbass1/run.sh Bass06036D 20150528
+/data/work/procbass1/run.sh Bass06037D 20150528
+/data/work/procbass1/run.sh BASS06043QDCRMD 20150528
+/data/work/procbass1/run.sh BASS06038D    20150601
+2、02004用户
+/data/work/procbass1/run.sh Bass02004UseUpD 20150531
+3、用户状态
+/data/work/procbass1/run.sh Bass02008UsrChg 20150609  BassCuststatus_D
+4、产品订购
+/data/work/procbass1/run.sh BassSvcProdInstD 20150529
+5、月渠道
+/data/work/procbass1/run.sh Bass06021ChlbaseM    201505
+
+
+run.sh  BassDIM_BASS1_CHANNEL_ORG_AGENT  20150511
+run.sh Bass1ChannelInfoBase    20150502
+ run.sh    Bass06035D      20150502
+ run.sh Bass06036D 20150502
+ run.sh Bass06037D 20150502
+ /data/work/procbass1/run.sh BASS06043QDCRMD 20150526
+
+ run.sh Bass06040depositD 20150502  空接口
+ run.sh  BASS06043QDCRMD     20150502
+
+ run.sh Bass22055dealM     20150502
+ run.sh Bass06041D 20150502
+ run.sh  Bass22056dealM 20150502
+ run.sh BASS06038D    20150526
+
+王文宗 17:23:44
+md.tablefile_sh md.column_sh  team_code T004
+王文宗 17:25:48
+select * from md.column_sh where dataname in (select dataname from md.tablefile_sh where team_code = 'T004') and colname = 'CHANNEL_ID'
+
+SELECT OFFER_ID,
+           BASS1_VALUE1 AS BASS1_BRAND_ID,
+           BASS1_VALUE2 AS BASS1_DATA_CARD_M2M_TYPE
+      FROM SHBASS.BASS1_MAP_PLAN
+     WHERE BASS1_VALUE1 IN (1, 2, 3)
+     UNION
+     SELECT BOSS_VALUE_LEVEL1 AS OFFER_ID,
+            BASS1_VALUE_LEVER2 BASS1_BRAND_ID,
+            0 AS BASS1_DATA_CARD_M2M_TYPE
+     FROM SHBASS.BASS1_MAP_2 WHERE MAP_ID='BASS_STD1_0055' AND BASS1_VALUE_LEVER2 IN (1,2,3)
+
+     SELECT CASE WHEN A.OFFER_ID IS NOT NULL THEN A.OFFER_ID ELSE BIGINT(B.BOSS_VALUE_LEVEL1) END AS OFFER_ID,
+            CASE WHEN A.BASS1_VALUE1 IS NOT NULL THEN  A.BASS1_VALUE1 ELSE B.BASS1_VALUE_LEVER2 END  AS BASS1_BRAND_ID,
+            CASE WHEN A.BASS1_VALUE2 IS NOT NULL THEN  A.BASS1_VALUE2 ELSE '0' END AS BASS1_DATA_CARD_M2M_TYPE
+           FROM SHBASS.BASS1_MAP_PLAN A FULL JOIN (SELECT * FROM SHBASS.BASS1_MAP_2
+     	  WHERE BIGINT(BOSS_VALUE_LEVEL1)>300000000000
+     	  AND BASS1_VALUE_LEVER2 IN (1, 2, 3)
+     	  AND MAP_ID='BASS_STD1_0055' ) B
+         ON A.OFFER_ID=BIGINT(B.BOSS_VALUE_LEVEL1)
+
+         SELECT 380000184301,1,0 FROM SYSIBM.DUAL
+         UNION ALL
+         SELECT 380000184302,1,0 FROM SYSIBM.DUAL
+
+         INSERT INTO {BASS1DWD}.BASS1_CHANNEL_INFO_BASE_&TASK_ID
+           (
+           	CHANNEL_ID       ,
+           	CHANNEL_TYPE     ,
+           	CMCC_ID          ,
+           	NC_FLAG          ,
+           	COUNTY_NAME      ,
+           	TOWN_NAME        ,
+           	CHANNEL_NAME     ,
+           	CHANNEL_ADDRESS  ,
+           	CHANNEL_MANAGE_NAME,
+           	CHANNEL_MANAGE_MOBILE,
+           	LOCATION_TYPE    ,
+           	AREA_TYPE        ,
+           	CHANNEL_KIND     ,
+           	NO_OTHER         ,
+           	IS_SELL_MOBILE_FLAG ,
+           	CHANNEL_LEVEL    ,
+           	CHANNEL_STATUS   ,
+           	START_TIME       ,
+           	END_TIME         ,
+           	VALID_DATE       ,
+           	EXPIRE_DATE      ,
+           	OP_MONTH         ,
+           	LATITUDE         ,
+           	MAGNITUTE        ,
+           	DECO_FEE         ,
+           	DEVICE_FEE       ,
+           	OFFICE_FEE       ,
+           	PENSION         ,
+           	SUPPLIER_TYPE
+             ,PURCHASE_MONTH
+             ,BUILDING_CERT_NO
+            -- ,LAND_CERT_NO
+             ,IC_NO
+             ,PRICE
+             ,RENT_START_DATE
+             ,RENT_END_DATE
+             ,AVERAGE_RENT
+             --,BUILDING_AREA
+             --,USEABLE_AREA
+             --,FRONTER_AREA
+             --,COUNTER_NUM
+             --,STAFF_NUM
+             --,SEC_NUM
+             --,CLEANER_NUM
+             --,QUERY_FLAG
+             --,POS_FLAG
+             --,VIP_COUNTER_FLAG
+             --,VIP_ROOM_FLAG
+             --,PRINTER_NUM
+             --,TERM_NUM
+             --,G3_AREA
+             --,TV_NUM
+             --,NEWBUSI_PLAT_NUM
+             --,G3_TERM_NUM
+             --,NET_TERM_NUM
+             ,AREA
+             ,SERVICE_AREA
+             ,NET_TYPE
+             --,AIR_CHARGE_FLAG
+           )
+          select
+           	N.node_id  as CHANNEL_ID,
+           	'3' as CHANNEL_TYPE,
+           	'10200' as cmcc_id,
+           	 case when NC.nc_flag is null then '0' else NC.nc_flag end   as nc_flag,
+                 value(H.code_name,'其他') as county_name,
+           	case when B.DISTRICT_ID=1  then  '市区'
+           	     when B.DISTRICT_ID=2  then  '南郊'
+           	     when B.DISTRICT_ID=3  then  '北郊'
+           	     when B.DISTRICT_ID=11 then  '东区'
+           	     when B.DISTRICT_ID=12 then  '南区'
+           	     when B.DISTRICT_ID=13 then  '西区'
+           	     when B.DISTRICT_ID=14 then  '北区'
+           	     when B.DISTRICT_ID=15 then  '渠道运营中心(市区)'
+           	     when B.DISTRICT_ID=21 then  '闵行'
+           	     when B.DISTRICT_ID=22 then  '松江'
+           	     when B.DISTRICT_ID=23 then  '南汇'
+           	     when B.DISTRICT_ID=24 then  '金山'
+           	     when B.DISTRICT_ID=25 then  '奉贤'
+           	     when B.DISTRICT_ID=26 then  '南郊中心'
+           	     when B.DISTRICT_ID=31 then  '宝山'
+           	     when B.DISTRICT_ID=32 then  '青浦'
+           	     when B.DISTRICT_ID=33 then  '嘉定'
+           	     when B.DISTRICT_ID=34 then  '崇明'
+           	     when B.DISTRICT_ID=35 then  '北郊中心'end as TOWN_NAME,
+           	B.channel_entity_name as CHANNEL_NAME,
+           	value(N.node_addr,'无') as CHANNEL_ADDRESS,
+           	case when R.relation_name is not null then R.relation_name else '未知' end,
+           	case when R.relation_mobile is not null then R.relation_mobile else '未知' end,
+           	char(N.address_type+1) as LOCATION_TYPE,
+           	char(N.area_shape+1) as AREA_TYPE,
+             '6'  as CHANNEL_KIND,
+           	case
+           	     when (N.is_exclusive is null or N.is_exclusive =0) then '1'
+           	     when N.is_exclusive =1 then '0'
+           	end as NO_OTHER,
+             char(is_store) as SELL_MOBILE_FLAG ,
+           	case when N.NODE_LEVEL=4 then '1'
+           	     when N.NODE_LEVEL=3 then '2'
+           	     when N.NODE_LEVEL=99 then '3'
+           	     when N.NODE_LEVEL=2 then '4'
+           	     when N.NODE_LEVEL=1 then '5'
+           	     when N.node_level=6 then '6'end as CHANNEL_LEVEL,
+           	char(case
+                    when B.channel_entity_status in (3,11) then 1
+                    when B.channel_entity_status in (4,13) then 2
+                    when B.channel_entity_status in (12,5) then 3
+                 end
+                 ) as CHANNEL_STATUS,
+           	SUBSTR(busi_time,LOCATE('-', busi_time)-4,4  ) as START_TIME,
+           	SUBSTR(busi_time,LOCATE('-', busi_time)+1,4  )  as  business_edtime ,
+           	case when N.SIGN_BEGIN_DATE is not null
+           	          and N.SIGN_BEGIN_DATE<current date
+                       and N.SIGN_END_DATE>current date
+                  then replace(char(date(N.SIGN_BEGIN_DATE)),'-','')
+                  else '00010101'
+             end,
+           	case when N.SIGN_END_DATE is not null
+           	          and   N.SIGN_BEGIN_DATE<current date
+           	          and N.SIGN_END_DATE>current date
+           	          then replace(char(date(N.SIGN_END_DATE)),'-','')
+           	           else '00010101'
+           	end,
+           	case when N.SIGN_BEGIN_DATE is not null
+           	          and N.SIGN_END_DATE is not null
+           	          and N.SIGN_END_DATE>current date
+           	          and N.SIGN_BEGIN_DATE<current date
+           	     then 12*(year(current date) - year(N.SIGN_BEGIN_DATE))+(month(current date) - month(N.SIGN_BEGIN_DATE))
+           	 end,
+           	case when decimal(N.LONGITUDE)>=123 or  decimal(N.LONGITUDE)<120 or N.LONGITUDE is null
+           	     then char(121.00000)  else left(N.LONGITUDE,9)
+           	end,
+           	case when decimal(N.LATITUDE)>33  or decimal(N.LATITUDE)<30 or N.LATITUDE is null
+           	     then char(31.00000)  else left(N.LATITUDE,9)
+           	end,
+           	value(value(N.BUILDING_AMOUNT,N.Sum_area*2200),0)	          ,
+           	value(N.EQMT_AMOUNT	, case when g.org_class in (1,2,6,7,8,9)
+           	                           then 750000
+           	                           when g.org_class in (3)
+           	                           then 500000
+           	                           when g.org_class in (4,5)
+           	                           then 250000 else 0
+           	                       end)      ,
+           	value(N.OFFICES_AMOUNT  , case when g.org_class in (1,2,6,7,8,9)
+           	                               then 190000 when g.org_class in (3)
+           	                               then 142000 when g.org_class in (4,5)
+           	                               then 123000 else 0
+           	                           end)         ,
+           	0,
+           	CHAR(N.property_Nature+1) ,
+           	'000101',
+             case when N.property_Nature =0 then char(N.Property_Id) end,
+            -- '',
+             case when  N.property_Nature =0 then N.Node_License_Id end,
+             case when  N.property_Nature =0 then N.Building_Amount+N.Eqmt_Amount+N.Offices_Amount else 0 end,
+            value(case when  N.property_Nature in (1,2) then replace(char(date(n.RENT_START_DATE)),'-','')  else '00010101' end,'00010101')   ,
+             value(case when  N.property_Nature in (1,2) and N.RENT_START_DATE is not null
+                        then (case when  N.RENT_START_DATE<=N.RENT_END_DATE
+                                   then  replace(char(date(N.RENT_END_DATE)),'-','')
+                                   else '20991231'
+                              end)
+                        else '00010101' end,'00010101')   ,
+             case when  N.property_Nature in (1,2)
+                  then case when  N.House_Rent_Amount*12 <= 10000000 then House_Rent_Amount*12
+                            else 0
+                            end
+                  end
+                        ,case when  N.Sum_Area is not null  then decimal(N.Sum_Area,15,2) else 0  end shop_area
+                        ,case when  N.FRONT_USE_AREA is not null  and char(N.FRONT_USE_AREA) <>'#REF!'
+                              then decimal(N.FRONT_USE_AREA,15,2) else 0 end service_area
+                        ,char( E.net_type+1)  INTERNET_WAY
+           from
+          (
+           	select n.*,case when business_Time is not null and  substr(business_Time,1,1)='0'        then     replace(replace(replace(replace(business_time,'－','-'),'：',':'),':',''),' ','')
+                                                                             else '0900-1800'
+                                            end     busi_time
+             from {ODS}.ODS_CHANNEL_NODE_NEW_&TASK_ID n
+           	where rec_status=1
+           		and NODE_KIND IN (3,4,5,6,8,9,10)
+           ) N
+         join
+           (
+           	select *
+           	from  {ODS}.ods_channel_node_extinfo_NEW_&TASK_ID
+           	where
+           		rec_status=1
+           ) E
+           	on N.node_id=E.node_id
+          left join
+           	(select channel_entity_id       ,agent_id       ,org_id   from {BASS1DWD}.dim_BASS1_channel_org_agent_&TASK_ID ) DIM
+           on N.node_id=DIM.channel_entity_id
+            join
+           (
+           	select *
+           	 FROM   {ODS}.ODS_CHANNEL_AGENT_INFO_NEW_&TASK_ID
+           	where
+           		rec_status=1
+           		and AGENT_LEVEL in (1)
+           ) f
+           on DIM.agent_id=F.agent_id
+          join
+          (
+          	select *
+          	from {ODS}.ods_channel_entity_basic_info_NEW_&TASK_ID
+          	where rec_status=1 and channel_entity_type=1   and channel_entity_status in (3,4,5)
+          ) A
+          on A.channel_entity_id=DIM.agent_id
+            left join
+           	(select * from {DWD}.DIM_PRTY_ORG_INFO
+           	  where START_DATE <='&TASK_DATE'  AND END_DATE >  '&TASK_DATE'
+           	   ) g
+           on
+           	DIM.org_id=g.org_id
+           left join
+           (select *
+           	from {ODS}.ods_channel_entity_basic_info_NEW_&TASK_ID
+           	where
+           		rec_status=1
+           		and channel_entity_type=2
+           ) B
+           on N.node_id=B.channel_entity_id
+           left join
+                (select * from {ODS}.ODS_channel_sys_base_type_NEW_&TASK_ID where code_type=10023 )h
+           on
+                 B.REGION_ID=char(h.code_id)
+           left join
+           (
+           	select *
+          	from
+          	(
+          		select  rownumber() over(partition by channel_entity_id order by relation_type) as n,
+          			a.*
+          		from
+          			{ODS}.ods_channel_entity_relation_info_&TASK_ID a
+          		where
+          			relation_type in(1,5,6,8) and rec_status = 1
+          	) a
+          	where n=1
+           ) r
+           on
+           	N.node_id=r.channel_entity_id
+           left join
+           	{BASS1DWD}.BASS1_06035_CHANNEL_NC_INFO  NC
+           on
+           	 char(N.node_id)=NC.channel_id
+
+
+
+
+/home/bassdsp/DACP/proc/java -jar -Dfile.encoding=gbk pst-proc-1.0.0-SNAPSHOT.jar "-f Bass1InterCheckP -t 20150510 -itcode 02004"		本地稽核
+/home/bassdsp/DACP/proc/java -jar -Dfile.encoding=gbk pst-proc-1.0.0-SNAPSHOT.jar "-f Bass1InterCheckR -t 20150510 -itcode 02004"		考核稽核
+/home/bassdsp/DACP/proc/java -jar -Dfile.encoding=gbk pst-proc-1.0.0-SNAPSHOT.jar "-f Bass1DimCheck -t 20150510 -itcode 02004"			维度值

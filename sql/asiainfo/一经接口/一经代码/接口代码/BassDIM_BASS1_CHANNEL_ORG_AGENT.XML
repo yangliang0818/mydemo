@@ -1,0 +1,98 @@
+<mxGraphModel>
+    <root>
+        <mxCell id="-1"/>
+        <mxCell id="0" parent="-1"/>
+        <mxCell id="1" value="开始" style="shape=hexagon" parent="0" script="--开始--" fn="23" remark="开始" vertex="1">
+            <mxGeometry x="120" y="30" width="80" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="2" value="成功时" style="strokeColor=#00FF00" parent="0" source="1" target="3" linkType="0" edge="1">
+            <mxGeometry x="100" y="80" width="100" height="100" as="geometry">
+                <mxPoint x="100" y="180" as="sourcePoint"/>
+                <mxPoint x="160" y="150" as="targetPoint"/>
+            </mxGeometry>
+        </mxCell>
+        <mxCell id="3" value="清空表DIM_BASS1_CHANNEL_ORG_AGENT" parent="0"
+                script="{BASS1DWD}.DIM_BASS1_CHANNEL_ORG_AGENT_&amp;TASK_ID" fn="10" remark="清空表" vertex="1">
+            <mxGeometry x="110" y="150" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="删除一张表DIM_BASS1_CHANNEL_ORG_AGENT" parent="0"
+                script="{BASS1DWD}.DIM_BASS1_CHANNEL_ORG_AGENT_&amp;TASK_ID" fn="13" remark="删除一张表" vertex="1">
+            <mxGeometry x="110" y="230" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="完成时" style="strokeColor=#000000" parent="0" source="3" target="4" edge="1">
+            <mxGeometry x="100" y="80" width="100" height="100" as="geometry">
+                <mxPoint x="160" y="90" as="sourcePoint"/>
+                <mxPoint x="160" y="150" as="targetPoint"/>
+            </mxGeometry>
+        </mxCell>
+        <mxCell id="10" value="创建表DIM_BASS1_CHANNEL_ORG_AGENT" parent="0"
+                script="{BASS1DWD}.DIM_BASS1_CHANNEL_ORG_AGENT_YYYYMMDD" fn="14" remark="创建表" vertex="1">
+            <mxGeometry x="110" y="330" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="11" value="完成时" style="strokeColor=#000000" parent="0" source="4" target="10" edge="1">
+            <mxGeometry x="100" y="80" width="100" height="100" as="geometry">
+                <mxPoint x="160" y="90" as="sourcePoint"/>
+                <mxPoint x="160" y="150" as="targetPoint"/>
+            </mxGeometry>
+        </mxCell>
+        <mxCell id="14" value="插入表DIM_BASS1_CHANNEL_ORG_AGENT" parent="0"
+                script="insert into {BASS1DWD}.DIM_BASS1_CHANNEL_ORG_AGENT_&amp;TASK_ID&#xa;     select       distinct a.channel_entity_id  channel_entity_id,       c.org_id           org_id,       E.channel_entity_id         agent_id from (select channel_entity_id                    &#xa;                                  from {ODS}.ODS_CHANNEL_ENTITY_BASIC_INFO_new_&amp;TASK_ID                           where   rec_status=1 and channel_entity_type=2 and channel_entity_status in (3,11)       ) a &#xa; join  (   select       node_id,       node_kind   &#xa;               from    {ODS}.ODS_CHANNEL_NODE_new_&amp;TASK_ID   &#xa;     where   rec_status=1     and   node_kind  in (1,2,3,4,5,6,8,9,10)     )  B    &#xa;  on a.channel_entity_id=b.node_id &#xa;  left join    {ODS}.ODS_CHANNEL_ORG_AGENT_new_&amp;TASK_ID c  &#xa;on  a.channel_entity_id = c.AGENT_ID&#xa;join (select  channel_entity_id,parent_entity&#xa;     from {ODS}.ODS_CHANNEL_ENTITY_REL_INFO_NEW_&amp;TASK_ID &#xa; where rec_status=1 and channel_entity_type=2         ) d&#xa;on a.channel_entity_id=d.channel_entity_id &#xa;join (select channel_entity_id from  {ODS}.ODS_CHANNEL_ENTITY_BASIC_INFO_new_&amp;TASK_ID       &#xa;        where  rec_status=1  and channel_entity_type=1 and channel_entity_status =3) e&#xa;on d.parent_entity=e.channel_entity_id  join  (  select  AGENT_ID  &#xa;        from  {ODS}.ODS_CHANNEL_AGENT_INFO_new_&amp;TASK_ID  &#xa;where  rec_status=1  and agent_level =1                     ) f &#xa;on e.channel_entity_id=f.agent_id&#xa;   join&#xa;   (&#xa;   select   node_id&#xa;   from {ODS}.ods_channel_node_extinfo_NEW_&amp;TASK_ID&#xa;   where&#xa;   rec_status=1&#xa;   ) h &#xa;   on&#xa;   a.channel_entity_id=h.node_id"
+                fn="1" remark="插入表" vertex="1">
+            <mxGeometry x="110" y="410" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="15" value="成功时" style="strokeColor=#00FF00" parent="0" source="10" target="14" linkType="0"
+                edge="1">
+            <mxGeometry x="100" y="80" width="100" height="100" as="geometry">
+                <mxPoint x="160" y="90" as="sourcePoint"/>
+                <mxPoint x="160" y="150" as="targetPoint"/>
+            </mxGeometry>
+        </mxCell>
+        <mxCell id="22" value="结束" parent="0" script="结束" fn="23" remark="结束" vertex="1">
+            <mxGeometry x="320" y="410" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="23" value="成功时" style="strokeColor=#00FF00" parent="0" source="24" target="22" linkType="0"
+                edge="1">
+            <mxGeometry x="100" y="80" width="100" height="100" as="geometry">
+                <mxPoint x="250" y="480" as="sourcePoint"/>
+                <mxPoint x="160" y="150" as="targetPoint"/>
+            </mxGeometry>
+        </mxCell>
+        <mxCell id="24" value="runstats表DIM_BASS1_CHANNEL_ORG_AGENT" parent="0"
+                script="{BASS1DWD}.DIM_BASS1_CHANNEL_ORG_AGENT_&amp;TASK_ID" fn="11" remark="插入表" vertex="1">
+            <mxGeometry x="110" y="490" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="25" value="成功时" style="strokeColor=#00FF00" parent="0" source="14" target="24" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+    </root>
+</mxGraphModel>
+
+        <!--insert into {BASS1DWD}.DIM_BASS1_CHANNEL_ORG_AGENT_&TASK_ID
+        select       distinct a.channel_entity_id  channel_entity_id,       c.org_id           org_id,       E.channel_entity_id         agent_id from (select channel_entity_id
+        from {ODS}.ODS_CHANNEL_ENTITY_BASIC_INFO_new_&TASK_ID                           where   rec_status=1 and channel_entity_type=2 and channel_entity_status in (3,11)       ) a
+        join  (  	select  		    node_id,  		    node_kind
+        from  	 {ODS}.ODS_CHANNEL_NODE_new_&TASK_ID
+        where  		rec_status=1  	  and   node_kind  in (1,2,3,4,5,6,8,9,10)    		)  B
+        on a.channel_entity_id=b.node_id
+        left join    {ODS}.ODS_CHANNEL_ORG_AGENT_new_&TASK_ID c
+        on  a.channel_entity_id = c.AGENT_ID
+        join (select  channel_entity_id,parent_entity
+        from {ODS}.ODS_CHANNEL_ENTITY_REL_INFO_NEW_&TASK_ID
+        where rec_status=1 and channel_entity_type=2         ) d
+        on a.channel_entity_id=d.channel_entity_id
+        join (select channel_entity_id from  {ODS}.ODS_CHANNEL_ENTITY_BASIC_INFO_new_&TASK_ID
+        where  rec_status=1  and channel_entity_type=1 and channel_entity_status =3) e
+        on d.parent_entity=e.channel_entity_id  join  ( 	select 		AGENT_ID
+        from 		{ODS}.ODS_CHANNEL_AGENT_INFO_new_&TASK_ID
+        where 		rec_status=1 		and agent_level =1                     ) f
+        on e.channel_entity_id=f.agent_id
+        join
+        (
+        select   node_id
+        from {ODS}.ods_channel_node_extinfo_NEW_&TASK_ID
+        where
+        rec_status=1
+        ) h
+        on
+        a.channel_entity_id=h.node_id-->

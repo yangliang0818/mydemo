@@ -1,0 +1,219 @@
+<mxGraphModel>
+    <root>
+        <mxCell id="-1"/>
+        <mxCell id="0" parent="-1"/>
+        <mxCell id="1" value="开始" style="shape=hexagon" parent="0" script="--开始--" fn="23" remark="开始" vertex="1">
+            <mxGeometry x="120" y="30" width="80" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="2" value="成功时" style="strokeColor=#00FF00" parent="0" source="1" target="3" linkType="0" edge="1">
+            <mxGeometry x="100" y="80" width="100" height="100" as="geometry">
+                <mxPoint x="100" y="180" as="sourcePoint"/>
+                <mxPoint x="160" y="150" as="targetPoint"/>
+            </mxGeometry>
+        </mxCell>
+        <mxCell id="3" value="清空表TMP_BASS1_CUST_PERSON" parent="0"
+                script="{BASS1TEMP}.TMP_BASS1_CUST_PERSON_&amp;TASK_ID" fn="10" remark="清空表" vertex="1">
+            <mxGeometry x="110" y="150" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="删除一张表TMP_BASS1_CUST_PERSON" parent="0"
+                script="{BASS1TEMP}.TMP_BASS1_CUST_PERSON_&amp;TASK_ID" fn="13" remark="删除一张表" vertex="1">
+            <mxGeometry x="110" y="240" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="完成时" style="strokeColor=#000000" parent="0" source="3" target="4" edge="1">
+            <mxGeometry x="100" y="80" width="100" height="100" as="geometry">
+                <mxPoint x="160" y="90" as="sourcePoint"/>
+                <mxPoint x="160" y="150" as="targetPoint"/>
+            </mxGeometry>
+        </mxCell>
+        <mxCell id="10" value="创建表TMP_BASS1_CUST_PERSON" parent="0" script="{BASS1TEMP}.TMP_BASS1_CUST_PERSON_YYYYMMDD"
+                fn="14" remark="创建表" vertex="1">
+            <mxGeometry x="110" y="330" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="11" value="完成时" style="strokeColor=#000000" parent="0" source="4" target="10" edge="1">
+            <mxGeometry x="100" y="80" width="100" height="100" as="geometry">
+                <mxPoint x="160" y="90" as="sourcePoint"/>
+                <mxPoint x="160" y="150" as="targetPoint"/>
+            </mxGeometry>
+        </mxCell>
+        <mxCell id="14" value="插入表TMP_BASS1_CUST_PERSON" parent="0"
+                script="insert into {BASS1TEMP}.TMP_BASS1_CUST_PERSON_&amp;TASK_ID&#xa;select a.cust_id,substr(a.CUST_NAME,1,12),a.BIRTHDAY,a.OCCUPATION,a.GENDER,&#xa;case when a.CREATE_DATE &gt; &#39;2099-12-31&#39; then &#39;2099-12-31&#39; else a.create_date end,&#xa;a.CUST_ZIPCODE,a.cust_cert_TYPE,a.cust_cert_code,substr(a.CUST_ADDRESS,1,100),a.ORG_ID,a.CUST_STATUS, &#xa;case when b.create_date &gt; &#39;2099-12-31&#39; then  &#39;2099-12-31&#39; else b.create_date end &#xa;from {ODS}.ODS_CM_INDIV_CUSTOMER_&amp;TASK_ID a &#xa;left join &#xa;(select cust_id,min(create_date) as create_date from {ODS}.ODS_CM_INDIV_CUSTOMER_&amp;TASK_ID&#xa; group by cust_id) b  &#xa; on  a.cust_id=b.CUST_ID  and 1=1"
+                fn="1" remark="插入表" vertex="1">
+            <mxGeometry x="110" y="410" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="15" value="成功时" style="strokeColor=#00FF00" parent="0" source="10" target="14" linkType="0"
+                edge="1">
+            <mxGeometry x="100" y="80" width="100" height="100" as="geometry">
+                <mxPoint x="160" y="90" as="sourcePoint"/>
+                <mxPoint x="160" y="150" as="targetPoint"/>
+            </mxGeometry>
+        </mxCell>
+        <mxCell id="22" value="清空表BASS1_CUST_PERSON_NEW_LOCAL" parent="0"
+                script="{BASS1DWD}.BASS1_CUST_PERSON_NEW_LOCAL_&amp;TASK_ID" fn="10" remark="结束" vertex="1">
+            <mxGeometry x="310" y="370" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="23" value="成功时" style="strokeColor=#00FF00" parent="0" source="14" target="22" linkType="0"
+                edge="1">
+            <mxGeometry x="100" y="80" width="100" height="100" as="geometry">
+                <mxPoint x="160" y="90" as="sourcePoint"/>
+                <mxPoint x="160" y="150" as="targetPoint"/>
+            </mxGeometry>
+        </mxCell>
+        <mxCell id="24" value="删除一张表BASS1_CUST_PERSON_NEW_LOCAL" parent="0"
+                script="{BASS1DWD}.BASS1_CUST_PERSON_NEW_LOCAL_&amp;TASK_ID" fn="13" remark="结束" vertex="1">
+            <mxGeometry x="310" y="290" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="25" value="完成时" style="strokeColor=#000000" parent="0" source="22" target="24" edge="1">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="26" value="创建表BASS1_CUST_PERSON_NEW_LOCAL" parent="0"
+                script="{BASS1DWD}.BASS1_CUST_PERSON_NEW_LOCAL_YYYYMMDD&#xa;" fn="14" remark="结束" vertex="1">
+            <mxGeometry x="310" y="200" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="27" value="完成时" style="strokeColor=#000000" parent="0" source="24" target="26" edge="1">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="28" value="插入表BASS1_CUST_PERSON_NEW_LOCAL" parent="0"
+                script="insert into {BASS1DWD}.bass1_cust_person_new_local_&amp;TASK_ID (&#xa;cust_id,&#xa;cust_name,&#xa;birthday,&#xa;MARRIAGE,&#xa;occupation,&#xa;NATION,&#xa;edu_id,&#xa;income,&#xa;gender, &#xa;STATE,&#xa;VIP_FLAG,&#xa;CMCC_ID,&#xa;CREATE_DATE,&#xa;CONTACT_ADDRESS,&#xa;POST_CODE,&#xa;IDCARD_TYPE,&#xa;ID_CARD , &#xa;CHANL_ID ,&#xa;CERTIFI_TYPE_ID ,  &#xa;CERTIFI_CODE   ,   &#xa;AGENCY_PERSON  ,  &#xa;AGENCY_addr   &#xa;)&#xa;select&#xa;customer_id as cust_id,&#xa;substr(CUSTOMER_NAME,1,12) as cust_id,&#xa;case when birthday&gt;&#39;2099-12-31&#39; or birthday&lt;&#39;1900-01-01&#39; or birthday is null then &#39;1900-01-01&#39; else birthday end,&#xa;        &#39;3&#39; as MARRIAGE,&#xa;        value(b.bass1_value,&#39;99&#39;) as occupation,&#xa;        &#39;19&#39; as NATION,&#xa;        &#39;03&#39; as edu_id,&#xa;        &#39;03&#39; as income,&#xa;        case when gender in (1,2) then char(gender) else &#39;3&#39; end,&#xa;        &#39;142&#39; as STATE,&#xa;        &#39;0&#39; as VIP_FLAG,&#xa;        &#39;10200&#39; as CMCC_ID,&#xa;         case when a.cust_create_date&gt;a.user_create_date then a.user_create_date else a.cust_create_date end as create_date,&#xa;         case when a.Cust_ADDRESS is null then &#39;无&#39; else substr(a.Cust_ADDRESS,1,100) end , &#xa;         POSTCODE,  &#xa;         value(d.bass1_value,&#39;199&#39;),&#xa;         ID_CARD ,&#xa;         case when m.org_id = 402852 then &#39;BASS1_WB&#39; else e.channel_entity_id end , &#xa;         kk.bass1_value ,&#xa;         kk.CERTIFI_CODE ,&#xa;         substr(kk.AGENCY_PERSON,1,12) ,&#xa;         case when kk.AGENCY_ADDRESS is null then &#39;无&#39; else substr(kk.AGENCY_ADDRESS,1,100) end &#xa;         from &#xa;              {BASS1TEMP}.TMP_bass1_cust_person_&amp;TASK_ID a &#xa;          left join &#xa;            (select * from (select * from (select a.*,ROW_NUMBER() OVER(PARTITION BY cust_ID ORDER BY op_time DESC) as n from {BASS1DWD}.BASS1_ORD_CUST_F a where a.certifi_type_id is not null and a.agency_person is not null and a.certifi_code is not null and a.AGENCY_ADDRESS is not null ) where n=1) a  &#xa;            left join  (select bass1_value,boss_value from {BASS1DWD}.bass1_map where map_id=&#39;BASS_STD1_0061&#39;)  b &#xa;            on a.CERTIFI_TYPE_ID=b.boss_value &#xa;              )  kk  &#xa;          on a.customer_id=kk.cust_id  &#xa;     left outer join&#xa;     (&#xa;             select org_id &#xa;             from {DIM}.DIM_PRTY_ORG_INFO &#xa;             where used_flag=1 and BOSS_ORG_TYPE not in (4,99) &#xa;     ) m &#xa;     on&#xa;          a.org_id=m.org_id &#xa;     left outer join&#xa;     (select int(boss_value) as boss_value,bass1_value from {BASS1DWD}.bass1_map where map_id=&#39;BASS_STD1_0062&#39;) b&#xa;            on a.occupation=b.boss_value &#xa;        left outer join&#xa;     (select int(boss_value) as boss_value,bass1_value from {BASS1DWD}.bass1_map where map_id=&#39;BASS_STD1_0046&#39;) c&#xa;             on a.gender=c.boss_value left outer join&#xa;     (select int(boss_value) as boss_value,bass1_value from {BASS1DWD}.bass1_map where map_id=&#39;BASS_STD1_0061&#39;) d&#xa;             on a.id_card_type=d.boss_value left outer join&#xa;       (select int(org_id) as org_id,channel_entity_id from {BASS1DWD}.dim_bass1_channel_org_agent_&amp;PMMTASK_ID) e&#xa;             on m.org_id=e.org_id left outer join&#xa;     (select int(boss_value) as boss_value,bass1_value from {BASS1DWD}.bass1_map where map_id=&#39;BASS_STD1_0028&#39;) f&#xa;                        on a.customer_status=f.boss_value "
+                fn="1" remark="结束" vertex="1">
+            <mxGeometry x="310" y="90" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="29" value="成功时" style="strokeColor=#00FF00" parent="0" source="26" target="28" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="30" value="清空表BASS1_CUST_PERSON_NEW_DAY" parent="0"
+                script="{BASS1DWD}.BASS1_CUST_PERSON_NEW_DAY_&amp;TASK_ID" fn="10" remark="结束" vertex="1">
+            <mxGeometry x="480" y="150" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="31" value="成功时" style="strokeColor=#00FF00" parent="0" source="28" target="30" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="32" value="删除一张表BASS1_CUST_PERSON_NEW_DAY" parent="0"
+                script="{BASS1DWD}.BASS1_CUST_PERSON_NEW_DAY_&amp;TASK_ID" fn="13" remark="结束" vertex="1">
+            <mxGeometry x="480" y="240" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="33" value="完成时" style="strokeColor=#000000" parent="0" source="30" target="32" edge="1">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="34" value="创建表BASS1_CUST_PERSON_NEW_DAY" parent="0"
+                script="{BASS1DWD}.BASS1_CUST_PERSON_NEW_DAY_YYYYMMDD" fn="14" remark="结束" vertex="1">
+            <mxGeometry x="480" y="330" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="35" value="完成时" style="strokeColor=#000000" parent="0" source="32" target="34" edge="1">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="36" value="插入表BASS1_CUST_PERSON_NEW_DAY" parent="0"
+                script="insert into {BASS1DWD}.bass1_cust_person_new_day_&amp;TASK_ID&#xa;select a.* ,&#39;20&#39; from &#xa;(select * from {BASS1DWD}.bass1_cust_person_new_local_&amp;TASK_ID&#xa;except &#xa; select CUST_ID, &#xa; CUST_NAME,  &#xa;BIRTHDAY,  &#xa; MARRIAGE,  &#xa; OCCUPATION,  &#xa; NATION ,  &#xa; EDU_ID,   &#xa; INCOME,   &#xa; GENDER,   &#xa; STATE ,   &#xa; VIP_FLAG,   &#xa; CMCC_ID ,   &#xa; CREATE_DATE,   &#xa;CONTACT_ADDRESS,  &#xa; POST_CODE,   &#xa; IDCARD_TYPE,   &#xa; ID_CARD,   &#xa; CHANL_ID,   &#xa; CERTIFI_TYPE_ID,  &#xa; CERTIFI_CODE,   &#xa; AGENCY_PERSON,   &#xa; AGENCY_addr from {BASS1DWD}.bass1_cust_person_new_&amp;PDTASK_ID where status=&#39;20&#39; &#xa;) a "
+                fn="1" remark="结束" vertex="1">
+            <mxGeometry x="480" y="410" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="37" value="成功时" style="strokeColor=#00FF00" parent="0" source="34" target="36" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="38" value="清空表TMP_USER_01002" parent="0" script="{BASS1TEMP}.TMP_USER_01002" fn="10" remark="结束"
+                vertex="1">
+            <mxGeometry x="640" y="370" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="39" value="成功时" style="strokeColor=#00FF00" parent="0" source="60" target="38" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="40" value="删除一张表TMP_USER_01002" parent="0" script="{BASS1TEMP}.TMP_USER_01002" fn="13" remark="结束"
+                vertex="1">
+            <mxGeometry x="640" y="290" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="41" value="完成时" style="strokeColor=#000000" parent="0" source="38" target="40" edge="1">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="42" value="创建表TMP_USER_01002" parent="0" script="{BASS1TEMP}.TMP_USER_01002" fn="14" remark="结束"
+                vertex="1">
+            <mxGeometry x="640" y="200" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="43" value="完成时" style="strokeColor=#000000" parent="0" source="40" target="42" edge="1">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="44" value="插入表TMP_USER_01002" parent="0"
+                script="insert into {BASS1TEMP}.TMP_USER_01002 &#xa;select a.sub_id,b.customer_id,b.create_date from  &#xa;(select * from  {BASS1DWD}.bass1_custstatus_day_hz union all select * from  {BASS1DWD}.bass1_custstatus_day_&amp;MTASK_ID) a &#xa;inner join  &#xa;{BASS1DWD}.bass1_user_&amp;TASK_ID b  &#xa;on a.sub_id=b.sub_id  &#xa;where a.sub_status in(&#39;2030&#39;,&#39;2020&#39;,&#39;2010&#39;) and (a.sub_id,a.op_time) in &#xa;( &#xa;select sub_id,max(op_time) &#xa;from (select * from  {BASS1DWD}.bass1_custstatus_day_HZ union all select * from  {BASS1DWD}.bass1_custstatus_day_&amp;MTASK_ID) &#xa;group by sub_id &#xa;) "
+                fn="1" remark="结束" vertex="1">
+            <mxGeometry x="640" y="100" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="45" value="成功时" style="strokeColor=#00FF00" parent="0" source="42" target="44" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="46" value="清空表TMP_BASS1_CUST_PERSON" parent="0"
+                script="{BASS1TEMP}.TMP_BASS1_CUST_PERSON_&amp;TASK_ID" fn="10" remark="结束" vertex="1">
+            <mxGeometry x="820" y="150" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="47" value="成功时" style="strokeColor=#00FF00" parent="0" source="44" target="46" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="48" value="插入表TMP_BASS1_CUST_PERSON" parent="0"
+                script="insert into {BASS1TEMP}.TMP_BASS1_CUST_PERSON_&amp;TASK_ID &#xa; select a.cust_id,substr(a.CUST_NAME,1,12),a.BIRTHDAY,a.OCCUPATION,a.GENDER,&#xa; a.CREATE_DATE,a.CUST_ZIPCODE,a.cust_cert_TYPE,a.cust_cert_code,substr(a.CUST_ADDRESS,1,100),a.ORG_ID,a.CUST_STATUS,b.create_date&#xa;from {ODS}.ODS_CM_INDIV_CUSTOMER_&amp;TASK_ID a &#xa;inner join &#xa;(select customer_id,min(create_date) as create_date from {BASS1TEMP}.TMP_USER_01002 group by customer_id) b  &#xa;on  a.cust_id=b.CUSTOMER_ID"
+                fn="1" remark="结束" vertex="1">
+            <mxGeometry x="820" y="240" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="49" value="完成时" style="strokeColor=#000000" parent="0" source="46" target="48" edge="1">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="50" value="插入表TMP_BASS1_CUST_PERSON" parent="0"
+                script="insert into {BASS1DWD}.bass1_cust_person_new_day_&amp;TASK_ID (&#xa; cust_id,&#xa; cust_name,&#xa; birthday,&#xa; MARRIAGE,&#xa; occupation,&#xa; NATION,&#xa; edu_id,&#xa; income,&#xa; gender, &#xa; STATE,&#xa; VIP_FLAG,&#xa; CMCC_ID,&#xa; CREATE_DATE,&#xa; CONTACT_ADDRESS,&#xa; POST_CODE,&#xa; IDCARD_TYPE,&#xa; ID_CARD , &#xa;CHANL_ID, &#xa;CERTIFI_TYPE_ID ,  &#xa;CERTIFI_CODE ,  &#xa;AGENCY_PERSON ,  &#xa;AGENCY_addr ,  &#xa; STATUS &#xa;)&#xa;select&#xa; customer_id as cust_id,&#xa; substr(CUSTOMER_NAME,1,12) as cust_id,&#xa; case when birthday&gt;&#39;2099-12-31&#39; or birthday&lt;&#39;1900-01-01&#39; or birthday is null then &#39;1900-01-01&#39; else birthday end,&#xa; &#39;3&#39; as MARRIAGE,&#xa;        value(b.bass1_value,&#39;99&#39;) as occupation,&#xa;        &#39;19&#39; as NATION,&#xa;        &#39;03&#39; as edu_id,&#xa;        &#39;03&#39; as income,&#xa;        case when gender in (1,2) then char(gender) else &#39;3&#39; end,&#xa;        &#39;142&#39; as STATE,&#xa;        &#39;0&#39; as VIP_FLAG,&#xa;        &#39;10200&#39; as CMCC_ID,&#xa;         case when a.cust_create_date&gt;a.user_create_date then a.user_create_date else a.cust_create_date end as create_date,&#xa;         case when a.Cust_ADDRESS is null then &#39;无&#39; else substr(a.Cust_ADDRESS,1,100) end , &#xa;         POSTCODE,  &#xa;         value(d.bass1_value,&#39;199&#39;),&#xa;         ID_CARD ,&#xa;         case when m.org_id = 402852 then &#39;BASS1_WB&#39; else e.channel_entity_id end ,&#xa;         kk.bass1_value ,&#xa;         kk.CERTIFI_CODE ,&#xa;         substr(kk.AGENCY_PERSON,1,12) ,&#xa;         case when kk.AGENCY_ADDRESS is null then &#39;无&#39; else substr(kk.AGENCY_ADDRESS,1,100) end, &#xa;         &#39;11&#39; &#xa;         from &#xa;             (select a.* from  {BASS1TEMP}.TMP_bass1_cust_person_&amp;TASK_ID a &#xa;             left join &#xa;              (select customer_id from {BASS1DWD}.BASS1_user_srvc_&amp;TASK_ID &#xa;             where sub_status in (&#39;1010&#39;,&#39;1022&#39;,&#39;1031&#39;,&#39;1032&#39;,&#39;1033&#39;,&#39;1034&#39;,&#39;1039&#39;,&#39;1021&#39;,&#39;1040&#39;)) b &#xa;            on a.customer_id=b.customer_id where b.customer_id is null &#xa;              ) a&#xa;        left join &#xa;            (select * from (select * from (select a.*,ROW_NUMBER() OVER(PARTITION BY cust_ID ORDER BY op_time DESC) as n from {BASS1DWD}.BASS1_ORD_CUST_F a) where n=1) a  &#xa;            left join  (select bass1_value,boss_value from {BASS1DWD}.bass1_map where map_id=&#39;BASS_STD1_0061&#39;)  b &#xa;            on a.CERTIFI_TYPE_ID=b.boss_value &#xa;              )  kk  &#xa;          on a.customer_id=kk.cust_id  &#xa;     left outer join&#xa;     (&#xa;             select org_id &#xa;             from {DIM}.DIM_PRTY_ORG_INFO &#xa;             where used_flag=1 and BOSS_ORG_TYPE not in (4,99) &#xa;     ) m &#xa;     on&#xa;          a.org_id=m.org_id &#xa;     left outer join&#xa;     (select int(boss_value) as boss_value,bass1_value from {BASS1DWD}.bass1_map where map_id=&#39;BASS_STD1_0062&#39;) b&#xa;            on a.occupation=b.boss_value &#xa;        left outer join&#xa;     (select int(boss_value) as boss_value,bass1_value from {BASS1DWD}.bass1_map where map_id=&#39;BASS_STD1_0046&#39;) c&#xa;             on a.gender=c.boss_value left outer join&#xa;     (select int(boss_value) as boss_value,bass1_value from {BASS1DWD}.bass1_map where map_id=&#39;BASS_STD1_0061&#39;) d&#xa;             on a.id_card_type=d.boss_value left outer join&#xa;       (select int(org_id) as org_id,channel_entity_id from {BASS1DWD}.dim_bass1_channel_org_agent_&amp;PMMTASK_ID) e&#xa;             on m.org_id=e.org_id left outer join&#xa;     (select int(boss_value) as boss_value,bass1_value from {BASS1DWD}.bass1_map where map_id=&#39;BASS_STD1_0028&#39;) f&#xa;                        on a.customer_status=f.boss_value "
+                fn="1" remark="结束" vertex="1">
+            <mxGeometry x="820" y="330" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="51" value="成功时" style="strokeColor=#00FF00" parent="0" source="48" target="50" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="52" value="清空表BASS1_CUST_PERSON_NEW" parent="0"
+                script="{BASS1DWD}.BASS1_CUST_PERSON_NEW_&amp;TASK_ID" fn="10" remark="结束" vertex="1">
+            <mxGeometry x="980" y="370" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="53" value="成功时" style="strokeColor=#00FF00" parent="0" source="50" target="52" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="54" value="删除一张表BASS1_CUST_PERSON_NEW" parent="0"
+                script="{BASS1DWD}.BASS1_CUST_PERSON_NEW_&amp;TASK_ID" fn="13" remark="结束" vertex="1">
+            <mxGeometry x="980" y="280" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="55" value="完成时" style="strokeColor=#000000" parent="0" source="52" target="54" edge="1">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="60" value="插入表BASS1_CUST_PERSON_NEW_DAY" parent="0"
+                script="insert into {BASS1DWD}.bass1_cust_person_new_day_&amp;TASK_ID &#xa;      select a.* ,&#39;11&#39; from &#xa;         (select CUST_ID, &#xa; CUST_NAME,  &#xa;BIRTHDAY,  &#xa; MARRIAGE,  &#xa; OCCUPATION,  &#xa; NATION ,  &#xa; EDU_ID,   &#xa; INCOME,  &#xa; GENDER,   &#xa; STATE ,   &#xa; VIP_FLAG,   &#xa; CMCC_ID ,   &#xa; CREATE_DATE,   &#xa; CONTACT_ADDRESS,   &#xa; POST_CODE,   &#xa; IDCARD_TYPE,   &#xa; ID_CARD,   &#xa; CHANL_ID,   &#xa; CERTIFI_TYPE_ID,  &#xa; CERTIFI_CODE,   &#xa; AGENCY_PERSON,   &#xa; AGENCY_addr from {BASS1DWD}.bass1_cust_person_new_&amp;PDTASK_ID where status=&#39;20&#39; ) a &#xa; left join &#xa;  {BASS1DWD}.bass1_cust_person_new_local_&amp;TASK_ID  b &#xa; on a.cust_id=b.cust_id  &#xa; where b.cust_id is null "
+                fn="1" remark="结束" vertex="1">
+            <mxGeometry x="480" y="500" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="61" value="成功时" style="strokeColor=#00FF00" parent="0" source="36" target="60" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="62" value="创建表BASS1_CUST_PERSON_NEW" parent="0" script="{BASS1DWD}.BASS1_CUST_PERSON_NEW_YYYYMMDD"
+                fn="14" remark="结束" vertex="1">
+            <mxGeometry x="980" y="190" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="63" value="完成时" style="strokeColor=#000000" parent="0" source="54" target="62" edge="1">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="64" value="插入表BASS1_CUST_PERSON_NEW" parent="0"
+                script="insert into {BASS1DWD}.bass1_cust_person_new_&amp;TASK_ID &#xa;      select  &#xa;     VALUE( B.CUST_ID ,A.CUST_ID) ,&#xa;       VALUE( B.CUST_NAME,A.CUST_NAME) ,&#xa;        VALUE(B.BIRTHDAY ,A.BIRTHDAY) ,&#xa;        VALUE(B.MARRIAGE ,A.MARRIAGE),&#xa;        VALUE(B.OCCUPATION ,A.OCCUPATION),&#xa;        value(b.NATION ,a.NATION) ,&#xa;        value(b.EDU_ID ,a.EDU_ID),&#xa;        value(b.INCOME  ,a.INCOME) ,&#xa;        value(b.GENDER ,a.GENDER) ,&#xa;        value(b.STATE ,a.state) ,&#xa;       value( b.VIP_FLAG ,a. VIP_FLAG) ,&#xa;        value(b.CMCC_ID ,a.CMCC_ID) ,&#xa;       value(b.CREATE_DATE ,a.CREATE_DATE) ,&#xa;        value(b.CONTACT_ADDRESS,a.CONTACT_ADDRESS) ,&#xa;        value(b.POST_CODE ,a.POST_CODE ),&#xa;        value(b.IDCARD_TYPE,a.IDCARD_TYPE) ,&#xa;        value(b.ID_CARD  ,a.ID_CARD) ,&#xa;        value(b.CHANL_ID,a.CHANL_ID),&#xa;        value(b.CERTIFI_TYPE_ID,a.CERTIFI_TYPE_ID),&#xa;        value(b.CERTIFI_CODE,a.CERTIFI_CODE) ,&#xa;        value(b.AGENCY_PERSON,a.AGENCY_PERSON) ,&#xa;        value(b.AGENCY_addr,a.AGENCY_addr) ,&#xa;        value(b.STATUS ,a.STATUS) &#xa;          from  {BASS1DWD}.bass1_cust_person_new_&amp;PDTASK_ID a&#xa;          full join &#xa;                {BASS1DWD}.bass1_cust_person_new_day_&amp;TASK_ID b&#xa;          on a.cust_id=b.cust_id "
+                fn="1" remark="结束" vertex="1">
+            <mxGeometry x="980" y="90" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="65" value="成功时" style="strokeColor=#00FF00" parent="0" source="62" target="64" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="66" value="结束" parent="0" script="结束" fn="23" remark="结束" vertex="1">
+            <mxGeometry x="1150" y="130" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="67" value="成功时" style="strokeColor=#00FF00" parent="0" source="64" target="66" edge="1"
+                linkType="0">
+            <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+    </root>
+</mxGraphModel>

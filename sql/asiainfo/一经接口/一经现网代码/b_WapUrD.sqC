@@ -1,0 +1,349 @@
+/*#######################################################################################
+#	author:		Clarence																																		#
+#	date:			2009-04-23																																	#
+#	modify date:																																					#
+#	progname:	b_WapUrD.sqC																																#
+#	source table:	db2info.dw_wap_calluser_yyyymmdd                         								#
+#								dbi2nfo.bass1_user_srvc_yyyymmdd																				#
+#	ouput	table: db2info.bass1_wap_urllog_yyyymmdd  																			#
+#							 db2info.bass1_wap_gatelog_yyyymmdd                                       #
+#	中文名称（程序意用）：URL访问情况日报(22102)																					#
+#												WAP网关日报(22104)																							#
+#######################################################################################*/
+
+#include  "main.h"
+using namespace std;
+EXEC SQL INCLUDE SQLCA ;
+
+class proc: public Db2Tools
+{
+  protected:
+    int busiLogic();
+};
+
+int proc::busiLogic()
+{
+	EXEC SQL BEGIN DECLARE SECTION;
+		char sqlstr[20480];
+		char g_tabname[500];
+		sqlint32 res;
+	EXEC SQL END DECLARE SECTION;
+
+  DateFormat cur_date("%Y%m%d");
+  cur_date.dateParsing(g_op_time);
+  string dat_time(cur_date.getFormatDate("%Y-%m-%d").c_str());                  // YYYY-MM-DD
+  string op_time(cur_date.getFormatDate("%Y%m%d").c_str());                     // YYYYMMDD
+	string mon_time(cur_date.getFormatDate("%Y%m").c_str());											// YYYYMM
+
+
+  memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.dw_wap_log_%s",op_time.c_str());
+	res = db2DropTab(g_tabname,__FILE__,__LINE__);
+
+
+	memset(sqlstr,'\0',sizeof(sqlstr));
+  sprintf(sqlstr,"CREATE TABLE dw_wap_log_%s\
+	(\
+		wapgwid 	varchar(50),\
+		spdomain 	varchar(50),\
+		MSISDN   VARCHAR(30),\
+		times 		bigint,\
+		traffic 	bigint\
+	)\
+	in %s index in %s\
+	PARTITIONING KEY(msisdn,traffic) USING HASHING\
+	NOT LOGGED INITIALLY",op_time.c_str(),g_tbsname.c_str(),g_tbsindex.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  	sprintf(g_tabname,"db2info.dw_wap_log_%",op_time.c_str());
+	res = db2CreTab(sqlstr,g_tabname,__FILE__,__LINE__);
+
+	// 取正常状态DW,去除非法域名和规整手机号
+	memset(sqlstr,'\0',sizeof(sqlstr));
+	sprintf(sqlstr,"insert into dw_wap_log_%s\
+	select\
+		wapgwid,\
+		substr(spdomain,1,50),\
+		case when length(msisdn)>11 then right(msisdn,11) end,\
+		counts,\
+		uplinktraffic+downlinktraffic as traffic\
+	from\
+		DW_WAP_CALLUSER_%s a\
+	where\
+		statisticcode like '2%%'\
+		and spdomain is not null",op_time.c_str(),op_time.c_str(),op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  	sprintf(g_tabname,"db2info.dw_wap_log_%s",op_time.c_str());
+	if (db2Insert(sqlstr,g_tabname,__FILE__,__LINE__)<0)
+		return -1;
+	db2RunstatTab(g_tabname,__FILE__,__LINE__);
+
+//22102 URL访问情况日报
+	memset(sqlstr,'\0',sizeof(sqlstr));
+  sprintf(sqlstr,"CREATE TABLE bass1_wap_urllog_%s\
+  	(\
+		op_time 	char(8),\
+		roam 		char(1),\
+		domain 		varchar(50),\
+		user_num 	bigint,\
+		times 		bigint,\
+		traffic 	bigint\
+	)\
+	in %s index in %s PARTITIONING KEY(domain,traffic) USING HASHING\
+	NOT LOGGED INITIALLY",op_time.c_str(),g_tbsname.c_str(),g_tbsindex.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  	sprintf(g_tabname,"db2info.bass1_wap_urllog_%",op_time.c_str());
+	res = db2CreTab(sqlstr,g_tabname,__FILE__,__LINE__);
+
+	memset(sqlstr,'\0',sizeof(sqlstr));
+  	sprintf(sqlstr,"alter table bass1_wap_urllog_%s activate not logged initially with empty table",op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  	sprintf(g_tabname,"db2info.bass1_wap_urllog_%s",op_time.c_str());
+	res = db2DelAll(g_tabname,__FILE__,__LINE__);
+/*
+22102 URL访问情况日报
+01	日期	格式：YYYYMMDD
+02	漫游类型	1：本省
+			2：国内漫游来访
+			3：国际漫游来访
+03	域名（URL）	填写至二级目录（不是二级域名），二级目录指到第二个左斜线前的URL，并去掉最前面的Http://和第二个左斜线，如URL（http://www.sina.com/news）只上报“www.sina.com/news”；URL（http://blog.sohu.com/news/）只上报“blog.sohu.com/news”。
+04	用户数
+05	成功请求次数
+06	流量	单位：字节
+*/
+	memset(sqlstr,'\0',sizeof(sqlstr));
+	sprintf(sqlstr,"insert into bass1_wap_urllog_%s\
+	select\
+		'%s',\
+		roam,\
+		spdomain,\
+		count(distinct a.msisdn),\
+		sum(times),\
+		sum(traffic)\
+	from(\
+		select\
+			case when b.msisdn is not null then '1' else '2' end as roam,\
+			spdomain,\
+			a.msisdn,\
+			times,\
+			traffic\
+		from\
+			dw_wap_log_%s a\
+		left join\
+			bass1_user_srvc_%s b\
+		on\
+			a.msisdn=b.msisdn\
+	) a\
+	group by roam,spdomain",op_time.c_str(),op_time.c_str(),op_time.c_str(),op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.bass1_wap_urllog_%s",op_time.c_str());
+	if (db2Insert(sqlstr,g_tabname,__FILE__,__LINE__)<0)
+		return -1;
+	db2RunstatTab(g_tabname,__FILE__,__LINE__);
+
+	// 22014WAP网关日报
+	memset(sqlstr,'\0',sizeof(sqlstr));
+  sprintf(sqlstr,"CREATE TABLE bass1_wap_gatelog_%s\
+  	(\
+		op_time char(8),\
+		roam char(1),\
+		gwid varchar(50),\
+		user_num bigint,\
+		times bigint\
+	)\
+	in %s index in %s\
+	NOT LOGGED INITIALLY",op_time.c_str(),g_tbsname.c_str(),g_tbsindex.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.bass1_wap_gatelog_%",op_time.c_str());
+	res = db2CreTab(sqlstr,g_tabname,__FILE__,__LINE__);
+
+	memset(sqlstr,'\0',sizeof(sqlstr));
+  sprintf(sqlstr,"alter table bass1_wap_gatelog_%s activate not logged initially with empty table",op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.bass1_wap_gatelog_%s",op_time.c_str());
+	res = db2DelAll(g_tabname,__FILE__,__LINE__);
+
+	memset(sqlstr,'\0',sizeof(sqlstr));
+	sprintf(sqlstr,"insert into bass1_wap_gatelog_%s\
+	select '%s',\
+		roam,\
+		wapgwid,\
+		count(distinct a.msisdn),\
+		sum(times)\
+	from\
+	(\
+		select\
+			case when b.msisdn is not null then '1' else '2' end as roam,\
+			wapgwid,\
+			a.msisdn,\
+			times\
+		from\
+			dw_wap_log_%s a\
+		left join\
+			bass1_user_srvc_%s b\
+		on\
+			a.msisdn=b.msisdn\
+	) a\
+	group by roam,wapgwid",op_time.c_str(),op_time.c_str(),op_time.c_str(),op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.bass1_wap_gatelog_%s",op_time.c_str());
+	if (db2Insert(sqlstr,g_tabname,__FILE__,__LINE__)<0)
+		return -1;
+	db2RunstatTab(g_tabname,__FILE__,__LINE__);
+	/*************************/
+
+	// WAP日志月接口用户数
+	memset(sqlstr,'\0',sizeof(sqlstr));
+  sprintf(sqlstr,"CREATE TABLE dw_wap_log_user_%s\
+  	(\
+		op_time char(8),\
+		roam char(1),\
+		wapgwid varchar(50),\
+		spdomain varchar(50),\
+		MSISDN   VARCHAR(30)\
+	)\
+	in %s index in %s PARTITIONING KEY (spdomain,msisdn)\
+	USING HASHING\
+	NOT LOGGED INITIALLY",mon_time.c_str(),g_tbsname.c_str(),g_tbsindex.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.dw_wap_log_user_%",mon_time.c_str());
+	res = db2CreTab(sqlstr,g_tabname,__FILE__,__LINE__);
+
+	memset(sqlstr,'\0',sizeof(sqlstr));
+	sprintf(sqlstr,"delete from dw_wap_log_user_%s where op_time='%s'",mon_time.c_str(),op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.dw_wap_log_user_%s",mon_time.c_str());
+	if (db2Delete(sqlstr,g_tabname,__FILE__,__LINE__)<0)
+		return -1;
+
+	memset(sqlstr,'\0',sizeof(sqlstr));
+	sprintf(sqlstr,"insert into dw_wap_log_user_%s\
+	select\
+		'%s',\
+		case when b.msisdn is not null then '1' else '2' end as roam,\
+		wapgwid,\
+		spdomain,\
+		a.msisdn\
+	from\
+	(\
+		select\
+			wapgwid,\
+			spdomain,\
+			msisdn\
+		from dw_wap_log_%s a\
+	except\
+		select\
+			wapgwid,\
+			spdomain,\
+			msisdn\
+ 		from dw_wap_log_user_%s\
+ 	) a\
+ 	left join\
+ 		bass1_user_srvc_%s b\
+ 	on\
+ 		a.msisdn=b.msisdn",mon_time.c_str(),op_time.c_str(),op_time.c_str(),mon_time.c_str(),op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.dw_wap_log_user_%s",mon_time.c_str());
+	if (db2Insert(sqlstr,g_tabname,__FILE__,__LINE__)<0)
+		return -1;
+	db2RunstatTab(g_tabname,__FILE__,__LINE__);
+
+	// WAP日志月接口业务量 use for 22103
+	memset(sqlstr,'\0',sizeof(sqlstr));
+  sprintf(sqlstr,"CREATE TABLE bass1_wap_urllog_%s\
+  	(\
+		op_time char(8),\
+		roam char(1),\
+		domain varchar(50),\
+		user_num bigint,\
+		times bigint,\
+		traffic bigint\
+	)\
+	in %s index in %s\
+	NOT LOGGED INITIALLY",mon_time.c_str(),g_tbsname.c_str(),g_tbsindex.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.bass1_wap_urllog_%",mon_time.c_str());
+	res = db2CreTab(sqlstr,g_tabname,__FILE__,__LINE__);
+
+	memset(sqlstr,'\0',sizeof(sqlstr));
+	sprintf(sqlstr,"delete from bass1_wap_urllog_%s where op_time='%s'",mon_time.c_str(),op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.bass1_wap_urllog_%s",mon_time.c_str());
+	if (db2Delete(sqlstr,g_tabname,__FILE__,__LINE__)<0)
+		return -1;
+
+	memset(sqlstr,'\0',sizeof(sqlstr));
+	sprintf(sqlstr,"insert into bass1_wap_urllog_%s\
+	select\
+		'%s',\
+		roam,\
+		value(b.url_id,a.domain),\
+		0,\
+		sum(times),\
+		sum(traffic)\
+	from\
+		bass1_wap_urllog_%s a\
+	left join\
+	(\
+		select\
+			distinct url,\
+			url_id\
+		from DIM_WAP_URL\
+	) b\
+	on\
+		a.domain=b.url\
+	group by\
+		roam,\
+		value(b.url_id,a.domain)",mon_time.c_str(),op_time.c_str(),op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.bass1_wap_urllog_%s",mon_time.c_str());
+	if (db2Insert(sqlstr,g_tabname,__FILE__,__LINE__)<0)
+		return -1;
+	db2RunstatTab(g_tabname,__FILE__,__LINE__);
+
+	// WAP日志月接口业务量 use for 22105
+	memset(sqlstr,'\0',sizeof(sqlstr));
+  sprintf(sqlstr,"CREATE TABLE bass1_wap_gatelog_%s\
+ 	(\
+		op_time char(8),\
+		roam char(1),\
+		gwid varchar(50),\
+		user_num bigint,\
+		times bigint\
+	)\
+	in %s index in %s\
+	NOT LOGGED INITIALLY",mon_time.c_str(),g_tbsname.c_str(),g_tbsindex.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.bass1_wap_gatelog_%",mon_time.c_str());
+	res = db2CreTab(sqlstr,g_tabname,__FILE__,__LINE__);
+
+	memset(sqlstr,'\0',sizeof(sqlstr));
+	sprintf(sqlstr,"delete from bass1_wap_gatelog_%s where op_time='%s'",mon_time.c_str(),op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.bass1_wap_gatelog_%s",mon_time.c_str());
+	if (db2Delete(sqlstr,g_tabname,__FILE__,__LINE__)<0)
+		return -1;
+
+	memset(sqlstr,'\0',sizeof(sqlstr));
+	sprintf(sqlstr,"insert into bass1_wap_gatelog_%s\
+	select\
+		'%s',\
+		roam,\
+		gwid,\
+		0,\
+		sum(times)\
+	from bass1_wap_gatelog_%s a\
+	group by roam,gwid",mon_time.c_str(),op_time.c_str(),op_time.c_str());
+	memset(g_tabname,'\0',sizeof(g_tabname));
+  sprintf(g_tabname,"db2info.bass1_wap_gatelog_%s",mon_time.c_str());
+	if (db2Insert(sqlstr,g_tabname,__FILE__,__LINE__)<0)
+		return -1;
+	db2RunstatTab(g_tabname,__FILE__,__LINE__);
+
+	return 0;
+}
+
+proc db2tools;
+int main(int argc,char *argv[])
+{
+   return db2tools.run(argc,argv);
+}

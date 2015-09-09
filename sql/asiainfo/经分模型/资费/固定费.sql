@@ -1,0 +1,59 @@
+﻿--db2版本调试成功语句
+SELECT DISTINCT I.PROD_ID,F.ITEM_CODE,H.BASE_VAL*1.00/100,E.BILLING_TYPE,E.TAX_INCLUDED FROM SHODS.ODS_PM_PRODUCT_OFFERING_20140515 A
+JOIN (SELECT DISTINCT PRODUCT_OFFERING_ID,PRICING_PLAN_ID FROM SHODS.ODS_PM_PRODUCT_PRICING_PLAN_20140515 ) B ON A.PRODUCT_OFFERING_ID=B.PRODUCT_OFFERING_ID
+JOIN (SELECT C.PRICING_PLAN_ID,C.PRICE_ID,C.BILLING_TYPE,D.TAX_INCLUDED FROM SHODS.ODS_PM_COMPOSITE_OFFER_PRICE_20140515 C,SHODS.ODS_PM_COMPONENT_PRODOFFER_PRICE_20140515 D
+WHERE C.PRICE_ID=D.PRICE_ID AND D.PRICE_TYPE=7)E
+ON B.PRICING_PLAN_ID=E.PRICING_PLAN_ID
+JOIN SHODS.ODS_PM_RECURRING_FEE_DTL_20140515 F
+ON E.PRICE_ID=F.PRICE_ID
+JOIN SHODS.ODS_PM_RATES_20140515 G
+ON F.RATE_ID=G.RATE_ID
+JOIN SHODS.ODS_PM_CURVE_SEGMENTS_20140515 H
+ON G.CURVE_ID=H.CURVE_ID
+JOIN SHDW.DIM_ACC_BOSSPROD_CRMPROD_REL I
+ON A.PRODUCT_OFFERING_ID=I.BOSS_PROD_ID with ur;
+
+--oracle版本
+select distinct  a.PRODUCT_OFFERING_ID PROD_ID,
+       a.NAME PROD_NAME,
+       a.BILLING_PRIORITY,  --固费优先级
+       c.BILLING_TYPE,      --预付后标识（-1：ALL, 适合所有付费类型 0：预付 1：后付）
+       d.TAX_INCLUDED,      --含税标示
+       e.ITEM_CODE,
+       i.NAME,
+       h.BASE_VAL,
+       m.NAME MEASURE_NAME
+  From pd.PM_PRODUCT_OFFERING          a,
+       pd.PM_PRODUCT_PRICING_PLAN      b,
+       pd.PM_COMPOSITE_OFFER_PRICE     c,
+       pd.PM_COMPONENT_PRODOFFER_PRICE d,
+       pd.PM_RECURRING_FEE_DTL         e,
+       pd.PM_RATES                     f,
+       pd.PM_CURVE                     g,
+       pd.PM_CURVE_SEGMENTS            h,
+       pd.PM_PRICE_EVENT               i,
+       sd.SYS_POLICY                   j,  --use_marker_id关联
+       sd.SYS_POLICY                   k,  --formula_id关联
+       sd.SYS_POLICY                   l,  --pm_recurring_fee_dtl.expr_id关联
+       sd.sys_measure                  m,
+       pd.pm_pricing_plan              n
+ where a.PRODUCT_OFFERING_ID = b.PRODUCT_OFFERING_ID
+   and b.PRICING_PLAN_ID = c.PRICING_PLAN_ID
+   and b.PRICING_PLAN_ID = n.PRICING_PLAN_ID
+   and c.PRICE_ID = d.PRICE_ID
+   and d.PRICE_TYPE = 7                 --固费price类型为7
+   and d.PRICE_ID = e.PRICE_ID
+   and e.RATE_ID = f.RATE_ID
+   and f.CURVE_ID = g.CURVE_ID
+   and g.CURVE_ID = h.CURVE_ID
+   and e.ITEM_CODE = i.ITEM_ID
+   and e.USE_MARKER_ID = j.POLICY_ID
+   and j.USE_TRIGGER = 28
+   and  m.MEASURE_ID=10402
+   and h.formula_id = l.POLICY_ID
+   and l.USE_TRIGGER =22
+/*   and i.ITEM_TYPE = 2
+   and i.SUB_TYPE = 0*/
+   and e.EXPR_ID = k.POLICY_ID
+   and k.USE_TRIGGER =26
+   and a.PRODUCT_OFFERING_ID in(53001500);

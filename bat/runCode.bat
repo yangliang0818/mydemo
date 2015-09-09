@@ -1,0 +1,1 @@
+﻿java  -Xbootclasspath\a:C:\mybasswork\lib\classes12.jar com.codeborn.main.CodeBornMain

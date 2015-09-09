@@ -1,0 +1,16 @@
+﻿特殊规则结果名
+bass1_spec_rule_result
+create table bass1_spec_rule_result
+(
+rule_id varchar(15),
+rule_name varchar(512),
+op_date varchar(21),
+result  varchar(5)
+)DATA CAPTURE NONE
+  IN TBSN_APP
+   PARTITIONING KEY
+    (rule_id
+    ) USING HASHING;
+程序命名 bass1ruleR011
+将特殊规则的逻辑封装到DACP程序中，然后从后台执行DACP程序来测试
+把结果插入到bass1_spec_rule_result中

@@ -1,0 +1,33 @@
+﻿源表列表
+channel_entity_basic_info
+channel_entity_rel_info
+channel_node
+channel_agent_info
+channel_entity_relation_info
+channel_entity_acc_rel
+channel_bank_account
+channel_account
+chnl_node_authorization_info
+channel_family_agent_areainfo
+agent_choosephone_air
+channel_node_aptitude_info
+Channel_man_check
+chnl_realname_software_info
+channel_org_agent
+hm_org
+
+新老渠道系统网点类型枚举值转换：
+新系统里面的网点性质对应老系统的网点类型：新系统枚举编号：10033，老系统枚举编号10009
+1 直营营业厅 ==  16  自营厅
+2 加盟营业厅
+  在加盟营业厅里面有一个属性为“网点类型”，枚举编号 ：50007，
+    带店加盟店 == 14  合作厅
+    委托加盟店== 15  外包厅
+3 加盟社会店 == 12 指定授权店
+4 手机专卖店 == 13 星级网点
+5 授权代理店 == 13 星级网点
+6 手机卖场 == 12 指定授权店
+7 自助终端 == 19 自助终端
+8 校园直销队 == 27 校园直销队
+9 家庭业务代理店 == 17 家庭业务代理点
+10 其它网点

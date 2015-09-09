@@ -1,0 +1,1 @@
+java  -Xbootclasspath/a:/homeex/yxyal/java/lib/db2jcc.jar:/homeex/yxyal/java/lib/classes12.jar com.codeborn.dao.BaseDao
