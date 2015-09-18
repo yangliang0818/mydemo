@@ -1,0 +1,28 @@
+package com.设计模式.设计模式3_单例模式_Singleton.T2关键字单例模式;
+
+/**
+ * 上海好屋网信息技术有限公司
+ * Copyright (C), 2012-2015
+ * Author:   YangLiang 003631
+ * Date:     2015/9/18
+ * Description:
+ */
+public class Singleton {
+    private static Singleton instance = null;
+
+    private Singleton() {
+    }
+
+    private static synchronized void syncInit() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+    }
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            syncInit();
+        }
+        return instance;
+    }
+}
