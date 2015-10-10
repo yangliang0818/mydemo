@@ -7,7 +7,7 @@ package com.demo;
  * Date:     2015/7/14
  * Description:
  */
-@TestAnnotation(hello = false, word = "yangliang")
+@TestAnnotation(hello = false, word = "yangliang",typeEnum = TestAnnotation.TypeEnum.TYPE2,clazz = TestMyAnnotation.class)
 public class TestMyAnnotation {
     @TestFieldAnnotaion(filedCN = "杨亮")
     private String name;

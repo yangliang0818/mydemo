@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * Description:
  */
 public class TestMainAnnotation {
-    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
+    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InstantiationException {
         Class clazz = Class.forName("com.demo.TestMyAnnotation");
         Annotation[] annotation = clazz.getAnnotations();
         Field filed =clazz.getDeclaredField("name");
@@ -24,5 +24,7 @@ public class TestMainAnnotation {
         System.out.println(testAnnotation.flag);
         System.out.println(testAnnotation.toString());
         System.out.println(50000 - 14257.1);
+        System.out.println(testAnnotation.clazz().toString());
+        System.out.println(testAnnotation.clazz().newInstance());
     }
 }

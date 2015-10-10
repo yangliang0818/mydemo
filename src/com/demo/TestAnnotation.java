@@ -20,5 +20,11 @@ public @interface TestAnnotation {
     boolean hello() default true;
 
     String word() default "";
+
+    TypeEnum typeEnum() default TypeEnum.TYPE1;
+    Class clazz();
+    enum TypeEnum {
+        TYPE1, TYPE2;
+    }
 }
 
