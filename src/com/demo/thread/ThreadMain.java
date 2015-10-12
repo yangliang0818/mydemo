@@ -9,12 +9,21 @@ package com.demo.thread;
  */
 public class ThreadMain {
     public static void main(String[] args) {
-     new Thread1().start();
+        new Thread1().start();
+        new Thread(new Thread2()).start();
     }
-    static class Thread1 extends Thread{
+
+    static class Thread1 extends Thread {
         @Override
         public void run() {
             System.out.println("hello thread!!!!");
+        }
+    }
+
+    static class Thread2 implements Runnable {
+        @Override
+        public void run() {
+            System.out.println("hello thread2 !!!!");
         }
     }
 }
