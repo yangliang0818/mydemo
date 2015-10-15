@@ -23,7 +23,7 @@ public class PageMain {
         StringBuffer temp = new StringBuffer();
         try {
             /*String url = "http://www.baidu.com/jiaojing/ser.php";*/
-            String url="http://www.qq.com/";
+            String url="http://www.baidu.com/";
             HttpURLConnection uc = (HttpURLConnection) new URL(url).
                     openConnection();
             uc.setConnectTimeout(10000);
@@ -42,7 +42,7 @@ public class PageMain {
             out.flush();
             out.close();
             InputStream in = new BufferedInputStream(uc.getInputStream());
-            Reader rd = new InputStreamReader(in, "gb2312");
+            Reader rd = new InputStreamReader(in, "utf-8");
             int c = 0;
             while ((c = rd.read()) != -1) {
                 temp.append((char) c);
