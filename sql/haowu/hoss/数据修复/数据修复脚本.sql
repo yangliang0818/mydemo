@@ -1,0 +1,39 @@
+/*修复单号1509229008*/
+INSERT INTO client_groupbuy_amount_record
+  (
+   creater,
+   create_time,
+   modifier,
+   modify_time,
+   version,
+   follow_id,
+   client_groupbuy_record_id,
+   invoice_amount,
+   pay_type,
+   pose_no,
+   commit_user_id,
+   receipt_no,
+   status,
+   comment,
+   refund_no,
+   refund_status,
+   is_helpbuy)
+VALUES
+  (
+   -1,
+   '2015-10-12 16:30:58',
+   NULL,
+   '2015-10-12 16:30:58',
+   0,
+   40754359878,
+   40754352228,
+   '10000',
+   'pos',
+   '000857682220',
+   -1,
+   20150924000131,
+   buy_make,
+   NULL,
+   NULL,
+   NULL,
+   0);
