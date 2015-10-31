@@ -20,10 +20,10 @@ public class DB2DB {
     public static void main(String[] args) throws Exception {
         /*deleteSrcTable(objconn, TableEnum.登记律师表.tabname);
         dbLocal.set(true);*/
-        long t1=System.currentTimeMillis();
-        bakDB(TableEnum.提交记录统计表);
-        long t2=System.currentTimeMillis();
-        System.out.println("备份"+ TableEnum.提交记录统计表.toString()+"所需毫秒数"+(t2-t1));
+        long t1 = System.currentTimeMillis();
+        bakDB(TableEnum.PHP楼盘数据);
+        long t2 = System.currentTimeMillis();
+        System.out.println("备份" + TableEnum.PHP楼盘数据.toString() + "所需毫秒数" + (t2 - t1));
         //bakFullDB();
     }
 
@@ -48,23 +48,7 @@ public class DB2DB {
      * 表枚举类
      */
     public static enum TableEnum {
-        新闻咨询表("newask", "select id,qtype,content,askdate,date from newask", "insert into newask (id,qtype,content,askdate,date) values (?,?,?,?,?)", 5),
-        登记律师表("djls", "select id,name,phone,lsname,province,city,country,date from djls", "insert into djls(id,name,phone,lsname,province,city,country,date) values(?,?,?,?,?,?,?,?)", 8),
-        合作律师表("hzls", "select id,name,area,number,address,tel,email,website,imagename from hzls", "insert into hzls(id,name,area,number,address,tel,email,website,imagename) values(?,?,?,?,?,?,?,?,?)", 9),
-        内容推荐表("interest", "select id,pagename,title,url,date,number,model from interest", "insert into interest(id,pagename,title,url,date,number,model) values (?,?,?,?,?,?,?)", 7),
-        关键词表("keywords", "select id,title,pagename,keyword from keywords", "insert into keywords (id,title,pagename,keyword) values(?,?,?,?)", 4),
-        律师信息表("lawyer", "select id,name,area,fullname,number,phone,qq,mail,firstconntime,firstconnman,content,filepath from lawyer", "insert into lawyer(id,name,area,fullname,number,phone,qq,mail,firstconntime,firstconnman,content,filepath) values(?,?,?,?,?,?,?,?,?,?,?,?)", 12),
-        模块链接表("modellink", "select id,type,name,link,date from modellink", "insert into modellink(id,type,name,link,date) values(?,?,?,?,?)", 5),
-        所需帮助表("needhelp", "select id,ntype,qtype,province,city,country,name,phone,content,mail,date from needhelp", " insert into needhelp(id,ntype,qtype,province,city,country,name,phone,content,mail,date) values(?,?,?,?,?,?,?,?,?,?,?)", 11),
-        新闻信息表("news", "select id,area,title,content,newsDate from news", "insert into news(id,area,title,content,newsDate) values(?,?,?,?,?)", 5),
-        新闻信息明细表("newsattr", "select id,newsid,attrDate,attrArea from newsattr", "insert into newsattr(id,newsid,attrDate,attrArea)values(?,?,?,?)", 4),
-        新闻记录表("newss", "select id,title,content,newsDate from newss", "insert into newss(id,title,content,newsDate) values(?,?,?,?)", 4),
-        案例信息表("press", "select id,area,title,content,newsDate from press", "insert into press(id,area,title,content,newsDate) values(?,?,?,?,?)", 5),
-        省份信息表("province", "select id,simplename,name,status from province", "insert into province(id,simplename,name,status) values(?,?,?,?)", 4),
-        接待处信息表("servarea", "select id,province,areaname,address,phone from servarea", "insert into servarea(id,province,areaname,address,phone) values(?,?,?,?,?)", 5),
-        留言信息表("shiguwen", "select id,ifToll,duty,ifHaveContro,accidentJudge,judgeIfContro,accidentIfContro,phone,content from shiguwen", "insert into shiguwen(id,ifToll,duty,ifHaveContro,accidentJudge,judgeIfContro,accidentIfContro,phone,content) values(?,?,?,?,?,?,?,?,?)", 9),
-        提交记录统计表("tjtj", "select id,type,ttime,stime,tstime from tjtj", "insert into tjtj(id,type,ttime,stime,tstime) values(?,?,?,?,?)", 5),
-        投诉建议信息表("tsjy", "select id,type,name,phone,content,date from tsjy", "insert into tsjy(id,type,name,phone,content,date) values(?,?,?,?,?,?)", 6);
+        PHP楼盘数据("php_house", "select house_id,house_property,house_building from php_house", "insert into php_house (house_id,house_property,house_building) values (?,?,?)", 3);
         //表名
         String tabname;
         //备份表名
@@ -115,7 +99,7 @@ public class DB2DB {
      * @throws Exception
      */
     public static void bakFullDB() throws Exception {
-        long startTime=Dates.getDayLong();
+        long startTime = Dates.getDayLong();
         TableEnum[] tableEnums = TableEnum.values();
         int i = 1;
         for (TableEnum tableEnum : tableEnums) {
@@ -124,7 +108,7 @@ public class DB2DB {
             }
             bakDB(tableEnum);
         }
-        System.out.println("-------------共计备份"+tableEnums.length+"张表----耗时"+(Dates.getDayLong()-startTime)/1000+"秒-----------------");
+        System.out.println("-------------共计备份" + tableEnums.length + "张表----耗时" + (Dates.getDayLong() - startTime) / 1000 + "秒-----------------");
     }
 
     /**
@@ -222,7 +206,12 @@ public class DB2DB {
             for (int i = 1; i <= num; i++) {
                 statement.setObject(i, rs.getObject(i));
             }
-            statement.executeUpdate();
+            try {
+                statement.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         if (dbLocal.get()) {
             close(conn, statement, rs);
