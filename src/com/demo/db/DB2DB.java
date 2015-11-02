@@ -48,7 +48,19 @@ public class DB2DB {
      * 表枚举类
      */
     public static enum TableEnum {
-        PHP楼盘数据("php_house", "select house_id,house_property,house_building from php_house", "insert into php_house (house_id,house_property,house_building) values (?,?,?)", 3);
+        PHP楼盘数据("php_house", "select house_id,list_pic,house_name,house_pic,house_address,house_state,house_discount,house_rate," +
+                "house_goal,house_type,house_property,house_building,house_area,house_plate,house_price,house_lot,house_unit,house_features," +
+                "house_developers,house_description,house_advantage,house_shortcoming,house_shangjia,house_t,house_z,house_kucun,house_starttime," +
+                "house_endtime,house_time,house_update_time,house_youhui,house_1_1,house_total,house_x,house_y,house_city,tag,house_cq," +
+                "house_fs,house_jianjin,house_main,house_tj,cjurl,cjtime,pic_tag,soufun_page,soufun_domain,soufun_id,now() as soufun_time,ad_pic,money,house_order," +
+                "haiwai_country,haiwai_city,haiwai_label,haiwai_area,haiwai_total,app_houseid from php_house",
+                "insert into php_house (house_id,list_pic,house_name,house_pic,house_address,house_state,house_discount,house_rate,house_goal,house_type," +
+                        "house_property,house_building,house_area,house_plate,house_price,house_lot,house_unit,house_features,house_developers,house_description," +
+                        "house_advantage,house_shortcoming,house_shangjia,house_t,house_z,house_kucun,house_starttime,house_endtime,house_time,house_update_time," +
+                        "house_youhui,house_1_1,house_total,house_x,house_y,house_city,tag,house_cq,house_fs,house_jianjin,house_main,house_tj,cjurl," +
+                        "cjtime,pic_tag,soufun_page,soufun_domain,soufun_id,soufun_time,ad_pic,money,house_order,haiwai_country,haiwai_city,haiwai_label,haiwai_area," +
+                        "haiwai_total,app_houseid values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," +
+                        "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,)", 58);
         //表名
         String tabname;
         //备份表名
@@ -79,7 +91,7 @@ public class DB2DB {
      */
     public static void bakDB(TableEnum tableEnum) throws Exception {
         //备份表前预处理
-        preBakTableDeal(objconn, tableEnum.tabname);
+        //preBakTableDeal(objconn, tableEnum.tabname);
         //查询源表数据
         ResultSet srcSet = qrySrcData(srcconn, tableEnum.qrySql);
         //将源表数据插入备份表
