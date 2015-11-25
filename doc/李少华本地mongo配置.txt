@@ -1,0 +1,41 @@
+172.16.24.25
+houses_id = Field()
+    name = Field()  # 楼盘名字
+    city = Field()
+    area = Field()
+    average_price = Field()  # 平均价格
+    opendate_time = Field()  # 开盘时间
+    deliver_date = Field()  # 交房时间
+    address = Field()  # 楼盘地址
+    house_property = Field()  # 物业类型
+    house_favourable = Field()  # 项目特色
+    # 建筑类别
+    decorate_level = Field()  # 装修情况
+    # 环线位置
+    # 装修案例
+    plot_ratio = Field()  # 容积率
+    green_rate = Field()  # 绿化率
+    property_fee = Field()  # 物业费
+    property_company = Field()  # 物业公司
+    developer_name = Field()  # 开发商
+    presale_permits = Field()  # 预售许可证
+    sales_office_address = Field()  # 售楼地址
+    property_address = Field()  # 物业地址
+    # 项目配套
+    # 交通状况
+    building_decorate = Field()  # 建材装修
+    floor_condition = Field()  # 楼层状况
+    ratio_parking_spaces = Field()  # 车位信息
+    house_introduce = Field()  # 项目简介
+    floor_area = Field()  # 占地面积
+    building_area = Field()  # 建筑面积
+    # 开工时间
+    # 竣工时间
+    # 物业管理附加信息
+    # 投资商
+    # 按揭银行
+    # 工程进度
+    property_right = Field()  # 产权年限
+    planning_households = Field()  # 户数
+    business_circle = Field()  # 所属商圈
+    building_type = Field()  # 建筑类别
