@@ -23,20 +23,39 @@ public class PageMain {
         StringBuffer temp = new StringBuffer();
         try {
             /*String url = "http://www.baidu.com/jiaojing/ser.php";*/
-            String url="http://www.baidu.com/";
+            String url="https://api.talkingdata.com/metrics/app/v1";
             HttpURLConnection uc = (HttpURLConnection) new URL(url).
                     openConnection();
             uc.setConnectTimeout(10000);
             uc.setDoOutput(true);
-            uc.setRequestMethod("GET");
+            uc.setDoInput(true);
+            uc.setRequestMethod("POST");
             uc.setUseCaches(false);
             DataOutputStream out = new DataOutputStream(uc.getOutputStream());
 
             // 要传的参数
-            String s = URLEncoder.encode("ra", "GB2312") + "=" +
+            /*String s = URLEncoder.encode("ra", "GB2312") + "=" +
                     URLEncoder.encode(leibie, "GB2312");
             s += "&" + URLEncoder.encode("keyword", "GB2312") + "=" +
-                    URLEncoder.encode(num, "GB2312");
+                    URLEncoder.encode(num, "GB2312");*/
+            String s="{" +
+                    " accesskey: eb103ef8eb01abf798cde6374da8f568" +
+                    "    metrics:[newuser],              " +
+                    "    groupby:daily,                  " +
+                    "    filter:{                      " +
+                    "       start:2015-04-14,          " +
+                    "       end:2015-04-15,            " +
+                    "       platformids:[1,2],         " +
+                    "       versions:[1.0,2.0],        " +
+                    "       channelids:[1605,1607],    " +
+                    "       eventids:[clear,addCar],   " +
+                    "       pagenames:[index,pay]   " +
+                    " }," +
+                    "    order:desc,                " +
+                    "    limit:10,                       " +
+                    "    sum:true,                      " +
+                    "    avg:false                      " +
+                    " }";
             // DataOutputStream.writeBytes将字符串中的16位的unicode字符以8位的字符形式写道流里面
             out.writeBytes(s);
             out.flush();

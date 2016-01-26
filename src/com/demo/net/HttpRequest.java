@@ -1,5 +1,6 @@
 package com.demo.net;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -127,11 +128,29 @@ public class HttpRequest {
 
     public static void main(String[] args) {
         //发送 GET 请求
-        String s = HttpRequest.sendGet("http://www.baidu.com", "key=123&v=456");
-        System.out.println(s);
-
+        //String s = HttpRequest.sendGet("http://www.baidu.com", "key=123&v=456");
+        //System.out.println(s);
         //发送 POST 请求
-        String sr = HttpRequest.sendPost("http://www.baidu.com", "key=123&v=456");
+        String param="{" +
+                " accesskey: eb103ef8eb01abf798cde6374da8f568" +
+                "    metrics:[newuser],              " +
+                "    groupby:daily,                  " +
+                "    filter:{                      " +
+                "       start:2015-04-14,          " +
+                "       end:2015-04-15,            " +
+                "       platformids:[1,2],         " +
+                "       versions:[1.0,2.0],        " +
+                "       channelids:[1605,1607],    " +
+                "       eventids:[clear,addCar],   " +
+                "       pagenames:[index,pay]   " +
+                " }," +
+                "    order:desc,                " +
+                "    limit:10,                       " +
+                "    sum:true,                      " +
+                "    avg:false                      " +
+                " }";
+        String sr = HttpRequest.sendPost("https://api.talkingdata.com/metrics/app/v1", param);
+        /*String sr = HttpRequest.sendPost("http://www.baidu.com", "");*/
         System.out.println(sr);
     }
 }
