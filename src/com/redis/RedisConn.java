@@ -19,7 +19,7 @@ public class RedisConn {
         jedis.connect();
         jedis.select(10);
         System.out.println(jedis.hget("HIhaowu", "haowu"));
-        jedis.hset("HIhaowu", "good", "nana");
+        /*jedis.hset("HIhaowu", "good", "nana");
         System.out.println(jedis.hlen("HOSS_SESSION_HOSS_MAP_KEY_1"));
         Set set=jedis.hkeys("HOSS_SESSION_HOSS_MAP_KEY_1");
         System.out.println(set.contains("hoss_user_id2C32911132C5AF3E528EA1935BCE1DE1"));
@@ -28,7 +28,8 @@ public class RedisConn {
         System.out.println(jedis.hget("HOSS_SESSION_HOSS_MAP_KEY_1","hoss_user_id2C32911132C5AF3E528EA1935BCE1DE1"));
         System.out.println(jedis.hget("HOSS_SESSION_HOSS_MAP_KEY_1","hoss_web_sys_user_permissECAD5ACC23AC657B6EF27D702822E09B"));
         System.out.println(jedis.hget("HOSS_SESSION_HOSS_MAP_KEY_1","hoss_web_sys_user_permissD2BD5B9EA140276B891CF0CAC2B88BDF"));
-        System.out.println(jedis.hget("HOSS_SESSION_HOSS_MAP_KEY_1","HOSS_SESSION_F99038622B47E2598ECFF5CBB6BB1429"));/*第一次登录的id HOSS_SESSION_F99038622B47E2598ECFF5CBB6BB1429*/
-        System.out.println(set);
+        System.out.println(jedis.hget("HOSS_SESSION_HOSS_MAP_KEY_1","HOSS_SESSION_F99038622B47E2598ECFF5CBB6BB1429"));*//*第一次登录的id HOSS_SESSION_F99038622B47E2598ECFF5CBB6BB1429*//*
+        System.out.println(set);*/
+        System.out.println(jedis.hlen("HOSS_SESSION_HOSS_MAP_KEY_1"));
     }
 }
