@@ -17,4 +17,9 @@ public abstract class AbstractHandler {
     public void setHandler(Handler handler) {
         this.handler = handler;
     }
+    public void operator() {
+        if (getHandler() != null) {
+            getHandler().operator();
+        }
+    }
 }

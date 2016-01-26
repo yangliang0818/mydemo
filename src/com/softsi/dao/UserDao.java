@@ -4,8 +4,6 @@ import com.softsi.bean.UserBean;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 /**
  * 软思科技-助力信息时代互联互通
  * Copyright (C), 2012-2015
@@ -15,7 +13,6 @@ import javax.annotation.Resource;
  */
 @Component
 public class UserDao {
-    @Resource
     private HibernateTemplate hibernateTemplate;
 
     public void add(UserBean u) {
